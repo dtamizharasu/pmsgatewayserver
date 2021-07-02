@@ -1,0 +1,58 @@
+server:
+  port: 8087
+
+spring:
+  application:
+    name: API-GATEWAY
+  cloud:
+    gateway:
+      routes:
+        - id: Employee-Service
+          uri: lb://Employee-Service
+          predicates:
+            - Path=/api/employee/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: Employee-Service
+                fallbackuri: forward:/employeeServiceFallback
+        - id: Project-Service
+          uri: lb://Project-Service
+          predicates:
+            - Path=/api/project/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: Project-Service
+                fallbackuri: forward:/projectServiceFallback
+        - id: Allocation-Service
+            uri: lb://Allocation-Service
+            predicates:
+              - Path=/api/allocation/**
+            filters:
+              - name: CircuitBreaker
+                args:
+                  name: Allocation-Service
+                  fallbackuri: forward:/allocationServiceFallback
+
+hystrix:
+  command:
+    fallbackcmd:
+      isolation:
+        thread:
+          timeoutInMilliseconds: 4000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: hystrix.stream
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost
