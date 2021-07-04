@@ -26,14 +26,15 @@ spring:
                 name: Project-Service
                 fallbackuri: forward:/projectServiceFallback
         - id: Allocation-Service
-            uri: lb://Allocation-Service
-            predicates:
-              - Path=/api/allocation/**
-            filters:
-              - name: CircuitBreaker
-                args:
-                  name: Allocation-Service
-                  fallbackuri: forward:/allocationServiceFallback
+          uri: lb://Allocation-Service
+          predicates:
+            - Path=/api/allocation/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: Allocation-Service
+                fallbackuri: forward:/allocationServiceFallback
+
 
 hystrix:
   command:
@@ -48,11 +49,12 @@ management:
       exposure:
         include: hystrix.stream
 
-eureka:
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
-  instance:
-    hostname: localhost
+# Enable when no separate Config server
+#eureka:
+#  client:
+#    register-with-eureka: true
+#    fetch-registry: true
+#    service-url:
+#      defaultZone: http://localhost:8761/eureka/
+#  instance:
+#    hostname: localhost

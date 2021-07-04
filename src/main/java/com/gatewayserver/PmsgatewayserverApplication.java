@@ -8,6 +8,7 @@ import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 @SpringBootApplication
 @EnableHystrix
 @EnableEurekaClient
+
 public class PmsgatewayserverApplication {
 
 	public static void main(String[] args) {
